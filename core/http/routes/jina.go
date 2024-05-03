@@ -2,18 +2,18 @@ package routes
 
 import (
 	"github.com/go-skynet/LocalAI/core/config"
-	"github.com/go-skynet/LocalAI/core/http/endpoints/localai"
+	"github.com/go-skynet/LocalAI/core/http/endpoints/jina"
+
 	"github.com/go-skynet/LocalAI/pkg/model"
 	"github.com/gofiber/fiber/v2"
 )
 
-func RegisterPagesRoutes(app *fiber.App,
+func RegisterJINARoutes(app *fiber.App,
 	cl *config.BackendConfigLoader,
 	ml *model.ModelLoader,
 	appConfig *config.ApplicationConfig,
 	auth func(*fiber.Ctx) error) {
 
-	if !appConfig.DisableWelcomePage {
-		app.Get("/", auth, localai.WelcomeEndpoint(appConfig, cl, ml))
-	}
+	// POST endpoint to mimic the reranking
+	app.Post("/v1/rerank", jina.JINARerankEndpoint(cl, ml, appConfig))
 }

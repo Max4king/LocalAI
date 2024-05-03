@@ -1,9 +1,9 @@
 package http
 
 import (
-	"encoding/json"
+	"embed"
 	"errors"
-	"os"
+	"net/http"
 	"strings"
 
 	"github.com/go-skynet/LocalAI/pkg/utils"
@@ -20,6 +20,7 @@ import (
 	"github.com/gofiber/contrib/fiberzerolog"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/cors"
+	"github.com/gofiber/fiber/v2/middleware/filesystem"
 	"github.com/gofiber/fiber/v2/middleware/recover"
 
 	// swagger handler
@@ -43,6 +44,11 @@ func readAuthHeader(c *fiber.Ctx) string {
 
 	return authHeader
 }
+
+// Embed a directory
+//
+//go:embed static/*
+var embedDirStatic embed.FS
 
 // @title LocalAI API
 // @version 2.0.0
@@ -124,20 +130,6 @@ func App(cl *config.BackendConfigLoader, ml *model.ModelLoader, appConfig *confi
 			return c.Next()
 		}
 
-		// Check for api_keys.json file
-		fileContent, err := os.ReadFile("api_keys.json")
-		if err == nil {
-			// Parse JSON content from the file
-			var fileKeys []string
-			err := json.Unmarshal(fileContent, &fileKeys)
-			if err != nil {
-				return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{"message": "Error parsing api_keys.json"})
-			}
-
-			// Add file keys to options.ApiKeys
-			appConfig.ApiKeys = append(appConfig.ApiKeys, fileKeys...)
-		}
-
 		if len(appConfig.ApiKeys) == 0 {
 			return c.Next()
 		}
@@ -174,13 +166,6 @@ func App(cl *config.BackendConfigLoader, ml *model.ModelLoader, appConfig *confi
 		app.Use(c)
 	}
 
-	// Make sure directories exists
-	os.MkdirAll(appConfig.ImageDir, 0755)
-	os.MkdirAll(appConfig.AudioDir, 0755)
-	os.MkdirAll(appConfig.UploadDir, 0755)
-	os.MkdirAll(appConfig.ConfigsDir, 0755)
-	os.MkdirAll(appConfig.ModelPath, 0755)
-
 	// Load config jsons
 	utils.LoadConfig(appConfig.UploadDir, openai.UploadedFilesFile, &openai.UploadedFiles)
 	utils.LoadConfig(appConfig.ConfigsDir, openai.AssistantsConfigFile, &openai.Assistants)
@@ -192,8 +177,16 @@ func App(cl *config.BackendConfigLoader, ml *model.ModelLoader, appConfig *confi
 	routes.RegisterElevenLabsRoutes(app, cl, ml, appConfig, auth)
 	routes.RegisterLocalAIRoutes(app, cl, ml, appConfig, galleryService, auth)
 	routes.RegisterOpenAIRoutes(app, cl, ml, appConfig, auth)
-	routes.RegisterPagesRoutes(app, cl, ml, appConfig, auth)
-	routes.RegisterUIRoutes(app, cl, ml, appConfig, galleryService, auth)
+	if !appConfig.DisableWebUI {
+		routes.RegisterUIRoutes(app, cl, ml, appConfig, galleryService, auth)
+	}
+	routes.RegisterJINARoutes(app, cl, ml, appConfig, auth)
+
+	app.Use("/static", filesystem.New(filesystem.Config{
+		Root:       http.FS(embedDirStatic),
+		PathPrefix: "static",
+		Browse:     true,
+	}))
 
 	// Define a custom 404 handler
 	// Note: keep this at the bottom!

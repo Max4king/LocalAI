@@ -34,7 +34,7 @@ jobs:
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch python3-pip
           sudo apt-get install -y libopencv-dev
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           
           sudo rm -rfv /usr/bin/conda || true
 
@@ -64,7 +64,7 @@ jobs:
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch python3-pip
           sudo apt-get install -y libopencv-dev
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           
           sudo rm -rfv /usr/bin/conda || true
 
@@ -73,6 +73,37 @@ jobs:
            export PATH=$PATH:/opt/conda/bin
            make --jobs=5 --output-sync=target -C backend/python/sentencetransformers
            make --jobs=5 --output-sync=target -C backend/python/sentencetransformers test
+
+
+  tests-rerankers:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clone
+        uses: actions/checkout@v4
+        with: 
+          submodules: true
+      - name: Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install build-essential ffmpeg
+          curl https://repo.anaconda.com/pkgs/misc/gpgkeys/anaconda.asc | gpg --dearmor > conda.gpg && \
+             sudo install -o root -g root -m 644 conda.gpg /usr/share/keyrings/conda-archive-keyring.gpg && \
+              gpg --keyring /usr/share/keyrings/conda-archive-keyring.gpg --no-default-keyring --fingerprint 34161F5BF5EB1D4BFBBB8F0A8AEB4F8B29D82806 && \
+             sudo /bin/bash -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" > /etc/apt/sources.list.d/conda.list' && \
+             sudo /bin/bash -c 'echo "deb [arch=amd64 signed-by=/usr/share/keyrings/conda-archive-keyring.gpg] https://repo.anaconda.com/pkgs/misc/debrepo/conda stable main" | tee -a /etc/apt/sources.list.d/conda.list' && \
+             sudo apt-get update && \
+             sudo apt-get install -y conda
+          sudo apt-get install -y ca-certificates cmake curl patch python3-pip
+          sudo apt-get install -y libopencv-dev
+          pip install --user grpcio-tools==1.63.0
+          
+          sudo rm -rfv /usr/bin/conda || true
+
+      - name: Test rerankers
+        run: |
+           export PATH=$PATH:/opt/conda/bin
+           make --jobs=5 --output-sync=target -C backend/python/rerankers
+           make --jobs=5 --output-sync=target -C backend/python/rerankers test
 
   tests-diffusers:
     runs-on: ubuntu-latest
@@ -94,7 +125,7 @@ jobs:
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch python3-pip
           sudo apt-get install -y libopencv-dev
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           
           sudo rm -rfv /usr/bin/conda || true
 
@@ -124,7 +155,7 @@ jobs:
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch python3-pip
           sudo apt-get install -y libopencv-dev
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           
           sudo rm -rfv /usr/bin/conda || true
 
@@ -154,7 +185,7 @@ jobs:
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch python3-pip
           sudo apt-get install -y libopencv-dev
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           
           sudo rm -rfv /usr/bin/conda || true
 
@@ -186,7 +217,7 @@ jobs:
   #            sudo apt-get install -y conda
   #         sudo apt-get install -y ca-certificates cmake curl patch python3-pip
   #         sudo apt-get install -y libopencv-dev
-  #         pip install --user grpcio-tools
+  #         pip install --user grpcio-tools==1.63.0
           
   #         sudo rm -rfv /usr/bin/conda || true
 
@@ -258,7 +289,7 @@ jobs:
   #            sudo apt-get install -y conda
   #         sudo apt-get install -y ca-certificates cmake curl patch python3-pip
   #         sudo apt-get install -y libopencv-dev
-  #         pip install --user grpcio-tools
+  #         pip install --user grpcio-tools==1.63.0
           
   #         sudo rm -rfv /usr/bin/conda || true
 
@@ -291,7 +322,7 @@ jobs:
   #            sudo apt-get install -y conda
   #         sudo apt-get install -y ca-certificates cmake curl patch python3-pip
   #         sudo apt-get install -y libopencv-dev
-  #         pip install --user grpcio-tools
+  #         pip install --user grpcio-tools==1.63.0
   #         sudo rm -rfv /usr/bin/conda || true
   #     - name: Test vllm
   #       run: |
@@ -318,7 +349,7 @@ jobs:
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch python3-pip
           sudo apt-get install -y libopencv-dev
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           sudo rm -rfv /usr/bin/conda || true
       - name: Test vall-e-x
         run: |
@@ -345,7 +376,7 @@ jobs:
              sudo apt-get update && \
              sudo apt-get install -y conda
           sudo apt-get install -y ca-certificates cmake curl patch espeak espeak-ng python3-pip
-          pip install --user grpcio-tools
+          pip install --user grpcio-tools==1.63.0
           sudo rm -rfv /usr/bin/conda || true
 
       - name: Test coqui

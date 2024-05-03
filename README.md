@@ -50,15 +50,18 @@
 
 [Roadmap](https://github.com/mudler/LocalAI/issues?q=is%3Aissue+is%3Aopen+label%3Aroadmap)
 
+- Chat, TTS, and Image generation in the WebUI: https://github.com/mudler/LocalAI/pull/2222
+- Reranker API: https://github.com/mudler/LocalAI/pull/2121
+- Gallery WebUI: https://github.com/mudler/LocalAI/pull/2104
 - llama3: https://github.com/mudler/LocalAI/discussions/2076
 - Parler-TTS: https://github.com/mudler/LocalAI/pull/2027
-- Landing page: https://github.com/mudler/LocalAI/pull/1922
 - Openvino support: https://github.com/mudler/LocalAI/pull/1892
 - Vector store: https://github.com/mudler/LocalAI/pull/1795
 - All-in-one container image: https://github.com/mudler/LocalAI/issues/1855
-- Parallel function calling: https://github.com/mudler/LocalAI/pull/1726 / Tools API support: https://github.com/mudler/LocalAI/pull/1715
 
 Hot topics (looking for contributors):
+
+- WebUI improvements: https://github.com/mudler/LocalAI/issues/2156
 - Backends v2: https://github.com/mudler/LocalAI/issues/1126
 - Improving UX v2: https://github.com/mudler/LocalAI/issues/1373
 - Assistant API: https://github.com/mudler/LocalAI/issues/1273
@@ -89,7 +92,8 @@ docker run -ti --name local-ai -p 8080:8080 localai/localai:latest-aio-cpu
 - 🧠 [Embeddings generation for vector databases](https://localai.io/features/embeddings/)
 - ✍️ [Constrained grammars](https://localai.io/features/constrained_grammars/)
 - 🖼️ [Download Models directly from Huggingface ](https://localai.io/models/)
-- 🆕 [Vision API](https://localai.io/features/gpt-vision/)
+- 🥽 [Vision API](https://localai.io/features/gpt-vision/)
+- 🆕 [Reranker API](https://localai.io/features/reranker/)
 
 ## 💻 Usage
 
