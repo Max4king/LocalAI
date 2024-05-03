@@ -14,6 +14,9 @@ whisper.cpp
 /bloomz
 go-bert
 
+# unused
+unused_yaml_model/
+
 # LocalAI build binary
 LocalAI
 local-ai
