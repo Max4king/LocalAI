@@ -21,7 +21,7 @@ services:
       - .env
     environment:
       - MODELS_PATH=/models
-      - DEBUG=true
+      # - DEBUG=true
     volumes:
       - ./models:/models:cached
       - ./images/:/tmp/generated/images/
