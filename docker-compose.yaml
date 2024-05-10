@@ -8,7 +8,7 @@ services:
     # Image list (quay.io): https://quay.io/repository/go-skynet/local-ai?tab=tags
     # Image list (dockerhub): https://hub.docker.com/r/localai/localai
     # image: localai/localai:latest-aio-gpu-nvidia-cuda-12
-    image: localai/localai:v2.14.0-cublas-cuda12-core
+    image: localai/localai:v2.15.0-cublas-cuda12-ffmpeg
     build:
       context: .
       dockerfile: Dockerfile
@@ -21,12 +21,10 @@ services:
       - .env
     environment:
       - MODELS_PATH=/models
-      # - DEBUG=true
+      - DEBUG=true
     volumes:
       - ./models:/models:cached
       - ./images/:/tmp/generated/images/
-    # command:
-    #   - mixtral-instruct
     deploy:
       resources:
         reservations:
